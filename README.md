@@ -9,7 +9,7 @@ Your part of the prototype will be to develop a Web API that will be used by cus
 
 This API will allow our users to set up and manage an order of items.  The API will allow users to add and remove items and change the quantity of the items they want.  They should also be able to simply clear out all items from their order and start again.
 
-The functionality to complete the purchase of the items will be handled separately and will be written by a different team once this prototype is complete.  
+The functionality to complete the purchase of the items will be handled separately and will be written by a different team once this prototype is complete.
 
 For the purpose of this exercise, you can assume there’s an existing data storage solution that the API will use, so you can either create stubs for that functionality or simply hold data in memory.
 
@@ -22,4 +22,15 @@ If we decide to bring you in for further discussions, you should be prepared to 
 
 All code should be written in C# and target the .NET framework library version 4.5 or higher, or .NET core.  Please check all code into a publicly accessible repository on GitHub and send us a link to your repository.
 
+## Build
 
+From inside .\build folder run command build.ps1
+
+Parameters can be set ass command line arguments or as environment variables.
+Major and minor version numbers can be set in .\build\version.txt file.
+If required Http Clients can also be built for other frameworks than .NET Standard. This would need to be set in .csproj file.
+
+Results:
+- Self contained WebApi in publish folder
+- SDK NuGet package with Http Clients to WebApi in publish folder
+- Coverage report in Html format in coverage folder
