@@ -37,7 +37,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 		public async Task WhenSuccessfulyCreated_ReturnsId(Guid id)
 		{
 			this.repository.CreateCart().Returns(id);
-			var requestUrl = "/v1/cart";
+			var requestUrl = "/v1/carts";
 			using (var client = this.webApi.CreateClient())
 			{
 				var result = await client.PostAsJsonAsync(requestUrl, default(object));

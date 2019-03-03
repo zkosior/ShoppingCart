@@ -1,4 +1,4 @@
-namespace ShoppingCart.WebApi.Controllers
+namespace ShoppingCart.WebApi.Controllers.V1
 {
 	using Microsoft.AspNetCore.Mvc;
 	using ShoppingCart.DataAccess.Repositories;
@@ -18,10 +18,8 @@ namespace ShoppingCart.WebApi.Controllers
 			this.repository = repository;
 		}
 
-		[HttpPost("cart")]
-#pragma warning disable CA1822 // Mark members as static
+		[HttpPost("carts")]
 		public async Task<ActionResult<Guid>> CreateCart()
-#pragma warning restore CA1822 // Mark members as static
 		{
 			return await this.repository.CreateCart();
 		}

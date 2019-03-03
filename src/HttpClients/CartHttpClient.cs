@@ -18,7 +18,7 @@ namespace ShoppingCart.HttpClients
 		public async Task<Guid> CreateCart()
 		{
 			return await this.configuration.BaseUri.AbsoluteUri
-				.AppendPathSegment("v1/cart")
+				.AppendPathSegment("v1/carts")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.PostJsonAsync(default)
 				.ReceiveJson<Guid>();
