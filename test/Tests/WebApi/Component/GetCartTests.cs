@@ -5,6 +5,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using Microsoft.AspNetCore.Mvc.Testing;
 	using Microsoft.Extensions.DependencyInjection;
 	using NSubstitute;
+	using ShoppingCart.DataAccess.Models;
 	using ShoppingCart.DataAccess.Repositories;
 	using ShoppingCart.Tests.Helpers;
 	using ShoppingCart.WebApi;
@@ -16,13 +17,13 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using Xunit;
 
 	[Trait("TestCategory", "Component")]
-	public class CreateCartTests
+	public class GetCartTests
 		: IClassFixture<WebApplicationFactory<Startup>>
 	{
 		private readonly WebApplicationFactory<Startup> webApi;
 		private readonly ICartRepository repository = Substitute.For<ICartRepository>();
 
-		public CreateCartTests(
+		public GetCartTests(
 			WebApplicationFactory<Startup> webApiFixture)
 		{
 			this.webApi = webApiFixture.Create(
@@ -34,16 +35,16 @@ namespace ShoppingCart.Tests.WebApi.Component
 
 		[Theory]
 		[AutoData]
-		public async Task WhenSuccessfulyCreated_ReturnsId(Guid id)
+		public async Task WhenCartExists_ReturnsCart(Guid id, Cart cart)
 		{
-			this.repository.CreateCart().Returns(id);
-			var requestUrl = "/v1/carts";
+			this.repository.GetCart(Arg.Is<Guid>(p => p == id)).Returns(cart);
+			var requestUrl = $"/v1/carts/{id}";
 			using (var client = this.webApi.CreateClient())
 			{
-				var result = await client.PostAsJsonAsync(requestUrl, default(object));
+				var result = await client.GetAsync(requestUrl);
 
-				Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-				(await result.Content.ReadAsAsync<Guid>()).Should().Be(id);
+				Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+				(await result.Content.ReadAsAsync<Contracts.Cart>()).Should().BeEquivalentTo(cart);
 			}
 		}
 

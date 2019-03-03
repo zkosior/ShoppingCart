@@ -1,5 +1,6 @@
 namespace ShoppingCart.DataAccess.Repositories
 {
+	using ShoppingCart.DataAccess.Models;
 	using System;
 	using System.Threading.Tasks;
 
@@ -7,5 +8,7 @@ namespace ShoppingCart.DataAccess.Repositories
 	{
 		// Full data acces will probably be async anyway, so simulating it with this fake one
 		Task<Guid> CreateCart();
+
+		Task<Cart> GetCart(Guid id);
 	}
 }

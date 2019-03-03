@@ -3,6 +3,7 @@ namespace ShoppingCart.DataAccess.Repositories
 	using ShoppingCart.DataAccess.Models;
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Threading.Tasks;
 
 	public class CartRepository : ICartRepository
@@ -18,6 +19,14 @@ namespace ShoppingCart.DataAccess.Repositories
 				var cart = new Cart { Id = Guid.NewGuid() };
 				Carts.Add(cart);
 				return Task.FromResult(cart.Id);
+			}
+		}
+
+		public Task<Cart> GetCart(Guid id)
+		{
+			lock (this.lockObject)
+			{
+				return Task.FromResult(Carts.Single(p => p.Id == id));
 			}
 		}
 	}

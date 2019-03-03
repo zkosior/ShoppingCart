@@ -2,17 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ShoppingCart.HttpClients</RootNamespace>
-    <AssemblyName>ShoppingCart.HttpClients</AssemblyName>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    <AssemblyName>ShoppingCart.Contracts</AssemblyName>
+    <RootNamespace>ShoppingCart.Contracts</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>..\..\CodeAnalysis\StyleCop.ruleset</CodeAnalysisRuleSet>
     <Version>1.0.0</Version>
-    <Authors>ZKosior</Authors>
-    <PackageProjectUrl></PackageProjectUrl>
-    <Description>This project implements Http Clients to Shopping Cart WebApi</Description>
     <DebugSymbols>True</DebugSymbols>
     <DebugType>Full</DebugType>
     <LangVersion>latest</LangVersion>
@@ -32,25 +28,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-    <PackageReference Include="Flurl.Http" Version="2.4.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Contracts\Contracts.csproj" PrivateAssets="All" />
-  </ItemGroup>
-
-  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference')-&gt;WithMetadataValue('PrivateAssets', 'All'))" />
-    </ItemGroup>
-  </Target>
 
 </Project>

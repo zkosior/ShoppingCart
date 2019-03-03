@@ -2,6 +2,7 @@ namespace ShoppingCart.HttpClients
 {
 	using Flurl;
 	using Flurl.Http;
+	using ShoppingCart.Contracts;
 	using ShoppingCart.HttpClients.Configuration;
 	using System;
 	using System.Threading.Tasks;
@@ -22,6 +23,15 @@ namespace ShoppingCart.HttpClients
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.PostJsonAsync(default)
 				.ReceiveJson<Guid>();
+		}
+
+		public async Task<Cart> GetCart(Guid id)
+		{
+			return await this.configuration.BaseUri.AbsoluteUri
+				.AppendPathSegment($"v1/carts/{id}")
+				.WithTimeout(this.configuration.HttpTimeout.Value)
+				.GetAsync()
+				.ReceiveJson<Cart>();
 		}
 	}
 }

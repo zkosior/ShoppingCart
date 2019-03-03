@@ -1,4 +1,4 @@
-namespace ShoppingCart.DataAccess.Models
+namespace ShoppingCart.Contracts
 {
 	using System;
 	using System.Collections.Generic;

@@ -1,5 +1,6 @@
 namespace ShoppingCart.WebApi.Infrastructure.Extensions
 {
+	using AutoMapper;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ApiExplorer;
 	using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ namespace ShoppingCart.WebApi.Infrastructure.Extensions
 	using MoreLinq;
 	using Newtonsoft.Json.Converters;
 	using ShoppingCart.DataAccess.Repositories;
+	using ShoppingCart.WebApi.Services;
 	using Swashbuckle.AspNetCore.Swagger;
 	using System.Linq;
 
@@ -14,7 +16,9 @@ namespace ShoppingCart.WebApi.Infrastructure.Extensions
 	{
 		public static IServiceCollection RegisterServices(this IServiceCollection services)
 		{
+			services.AddAutoMapper(typeof(ServiceExtensions));
 			services.TryAddSingleton<ICartRepository, CartRepository>();
+			services.AddTransient<CartService>();
 			return services;
 		}
 
