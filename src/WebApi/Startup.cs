@@ -22,6 +22,7 @@ namespace ShoppingCart.WebApi
 		{
 			services
 				.AddSingleton(Log.Logger)
+				.RegisterServices()
 				.AddMvcWithDefaults()
 				.AddHealthChecks();
 		}

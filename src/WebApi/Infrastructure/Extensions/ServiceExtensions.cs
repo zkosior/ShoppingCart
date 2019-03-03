@@ -3,13 +3,21 @@ namespace ShoppingCart.WebApi.Infrastructure.Extensions
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ApiExplorer;
 	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.DependencyInjection.Extensions;
 	using MoreLinq;
 	using Newtonsoft.Json.Converters;
+	using ShoppingCart.DataAccess.Repositories;
 	using Swashbuckle.AspNetCore.Swagger;
 	using System.Linq;
 
 	public static class ServiceExtensions
 	{
+		public static IServiceCollection RegisterServices(this IServiceCollection services)
+		{
+			services.TryAddSingleton<ICartRepository, CartRepository>();
+			return services;
+		}
+
 		public static IServiceCollection AddMvcWithDefaults(
 			this IServiceCollection services)
 		{
