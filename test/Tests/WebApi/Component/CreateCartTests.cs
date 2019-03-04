@@ -19,32 +19,46 @@ namespace ShoppingCart.Tests.WebApi.Component
 	public class CreateCartTests
 		: IClassFixture<WebApplicationFactory<Startup>>
 	{
-		private readonly WebApplicationFactory<Startup> webApi;
+		private readonly HttpClient client;
 		private readonly ICartRepository repository = Substitute.For<ICartRepository>();
 
 		public CreateCartTests(
 			WebApplicationFactory<Startup> webApiFixture)
 		{
-			this.webApi = webApiFixture.Create(
-				new Dictionary<string, string>()
-				{
-				},
-				this.OverrideServices);
+			this.client = webApiFixture
+				.Create(
+					new Dictionary<string, string>()
+					{
+					},
+					this.OverrideServices)
+				.CreateClient();
 		}
 
 		[Theory]
 		[AutoData]
 		public async Task WhenSuccessfulyCreated_ReturnsId(Guid id)
 		{
+			// Given
 			this.repository.CreateCart().Returns(id);
-			var requestUrl = "/v1/carts";
-			using (var client = this.webApi.CreateClient())
-			{
-				var result = await client.PostAsJsonAsync(requestUrl, default(object));
 
-				Assert.Equal(HttpStatusCode.Created, result.StatusCode);
-				(await result.Content.ReadAsAsync<Guid>()).Should().Be(id);
-			}
+			// When
+			var result = await this.client.PostAsJsonAsync(
+				"/v1/carts",
+				default(object));
+
+			// Then
+			ReturnsStatusCode_Created(result);
+			await ReturnsIdOfCreatedCart(id, result);
+		}
+
+		private static async Task ReturnsIdOfCreatedCart(Guid id, HttpResponseMessage result)
+		{
+			(await result.Content.ReadAsAsync<Guid>()).Should().Be(id);
+		}
+
+		private static void ReturnsStatusCode_Created(HttpResponseMessage result)
+		{
+			Assert.Equal(HttpStatusCode.Created, result.StatusCode);
 		}
 
 		private void OverrideServices(IServiceCollection services)
