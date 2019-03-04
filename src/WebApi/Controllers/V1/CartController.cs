@@ -36,11 +36,23 @@ namespace ShoppingCart.WebApi.Controllers.V1
 			return await this.service.GetCart(cartId);
 		}
 
-		[NotFoundResultFilter]
 		[HttpDelete("carts/{cartId}")]
 		public async Task<IActionResult> DeleteCart(Guid cartId)
 		{
 			if (await this.service.DeleteCart(cartId))
+			{
+				return this.NoContent();
+			}
+			else
+			{
+				return this.NotFound(default);
+			}
+		}
+
+		[HttpDelete("carts/{cartId}/items")]
+		public async Task<IActionResult> ClearCartItems(Guid cartId)
+		{
+			if (await this.service.ClearCartItems(cartId))
 			{
 				return this.NoContent();
 			}

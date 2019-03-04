@@ -51,5 +51,19 @@ namespace ShoppingCart.HttpClients
 
 			return result.StatusCode == HttpStatusCode.NoContent;
 		}
+
+		public async Task<bool> ClearCartItems(Guid id)
+		{
+			var result = await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(
+					HttpStatusCode.NoContent,
+					HttpStatusCode.NotFound)
+				.AppendPathSegment($"v1/carts/{id}/items")
+				.WithTimeout(this.configuration.HttpTimeout.Value)
+				.HandleFailure(allowEmptyResponse: true)
+				.DeleteAsync();
+
+			return result.StatusCode == HttpStatusCode.NoContent;
+		}
 	}
 }

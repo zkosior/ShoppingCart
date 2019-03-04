@@ -12,5 +12,7 @@ namespace ShoppingCart.DataAccess.Repositories
 		Task<Cart> GetCart(Guid id);
 
 		Task<bool> DeleteCart(Guid id);
+
+		Task<bool> DeleteAllCartItems(Guid id);
 	}
 }

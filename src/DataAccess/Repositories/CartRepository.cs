@@ -50,5 +50,24 @@ namespace ShoppingCart.DataAccess.Repositories
 				return Task.FromResult(Carts.Remove(cart));
 			}
 		}
+
+		public Task<bool> DeleteAllCartItems(Guid id)
+		{
+			lock (this.lockObject)
+			{
+				Cart cart;
+				try
+				{
+					cart = Carts.Single(p => p.Id == id);
+				}
+				catch (InvalidOperationException)
+				{
+					return Task.FromResult(false);
+				}
+
+				cart.Items = new List<Item>();
+				return Task.FromResult(true);
+			}
+		}
 	}
 }

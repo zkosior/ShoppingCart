@@ -32,5 +32,10 @@ namespace ShoppingCart.WebApi.Services
 		{
 			return this.repository.DeleteCart(id);
 		}
+
+		public Task<bool> ClearCartItems(Guid id)
+		{
+			return this.repository.DeleteAllCartItems(id);
+		}
 	}
 }

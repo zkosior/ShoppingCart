@@ -11,5 +11,7 @@ namespace ShoppingCart.HttpClients
 		Task<Cart> GetCart(Guid id);
 
 		Task<bool> DeleteCart(Guid id);
+
+		Task<bool> ClearCartItems(Guid cartId);
 	}
 }
