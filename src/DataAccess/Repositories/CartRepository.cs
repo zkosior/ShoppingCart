@@ -29,5 +29,26 @@ namespace ShoppingCart.DataAccess.Repositories
 				return Task.FromResult(Carts.Single(p => p.Id == id));
 			}
 		}
+
+		public Task<bool> DeleteCart(Guid id)
+		{
+			// I intend to lie here a little.
+			// Will assume that I can always delete cart.
+			// So failure will happen only when cart was not there.
+			lock (this.lockObject)
+			{
+				Cart cart;
+				try
+				{
+					cart = Carts.Single(p => p.Id == id);
+				}
+				catch (InvalidOperationException)
+				{
+					return Task.FromResult(false);
+				}
+
+				return Task.FromResult(Carts.Remove(cart));
+			}
+		}
 	}
 }

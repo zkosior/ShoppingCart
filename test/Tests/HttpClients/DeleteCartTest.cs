@@ -3,23 +3,20 @@ namespace ShoppingCart.Tests.HttpClients
 	using AutoFixture.Xunit2;
 	using FluentAssertions;
 	using Flurl.Http.Testing;
-	using Newtonsoft.Json;
-	using ShoppingCart.Contracts;
 	using ShoppingCart.HttpClients;
 	using ShoppingCart.Tests.Helpers;
 	using System;
-	using System.Net;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
 
 	[Trait("TestCategory", "Unit")]
-	public class GetCartTests
+	public class DeleteCartTest
 	{
 		private const string BaseUrl = "http://localhost:8443";
 		private readonly ShoppingCartHttpClients configuration;
 
-		public GetCartTests()
+		public DeleteCartTest()
 		{
 			this.configuration = new ShoppingCartHttpClients
 			{
@@ -30,41 +27,39 @@ namespace ShoppingCart.Tests.HttpClients
 
 		[Theory]
 		[AutoData]
-		public async Task WhenExists_ReturnsCart(Guid id, Cart cart)
+		public async Task WhenExists_ReturnsSuccess(Guid id)
 		{
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWith(JsonConvert.SerializeObject(cart), 200);
+				httpTest.RespondWith(string.Empty, 204);
 
 				var result = await new CartHttpClient(this.configuration)
-					.GetCart(id);
+					.DeleteCart(id);
 
 				httpTest
 					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{id}")
-					.WithVerb(HttpMethod.Get)
+					.WithVerb(HttpMethod.Delete)
 					.Times(1);
-				result.Should().BeEquivalentTo(cart);
+				result.Should().BeTrue();
 			}
 		}
 
 		[Theory]
 		[AutoData]
-		public async Task WhenDoesNotExist_ReturnsCart(Guid id)
+		public async Task WhenDosNotExist_ReturnsFailure(Guid id)
 		{
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWith(
-					JsonConvert.SerializeObject(default(Cart)),
-					(int)HttpStatusCode.NotFound);
+				httpTest.RespondWith(string.Empty, 404);
 
 				var result = await new CartHttpClient(this.configuration)
-					.GetCart(id);
+					.DeleteCart(id);
 
 				httpTest
 					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{id}")
-					.WithVerb(HttpMethod.Get)
+					.WithVerb(HttpMethod.Delete)
 					.Times(1);
-				result.Should().BeNull();
+				result.Should().BeFalse();
 			}
 		}
 	}

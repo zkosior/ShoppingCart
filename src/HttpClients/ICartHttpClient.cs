@@ -9,5 +9,7 @@ namespace ShoppingCart.HttpClients
 		Task<Guid> CreateCart();
 
 		Task<Cart> GetCart(Guid id);
+
+		Task<bool> DeleteCart(Guid id);
 	}
 }

@@ -2,6 +2,7 @@ namespace ShoppingCart.WebApi.Controllers.V1
 {
 	using Microsoft.AspNetCore.Mvc;
 	using ShoppingCart.Contracts;
+	using ShoppingCart.WebApi.Infrastructure.Filters;
 	using ShoppingCart.WebApi.Services;
 	using System;
 	using System.Net;
@@ -23,14 +24,30 @@ namespace ShoppingCart.WebApi.Controllers.V1
 		[HttpPost("carts")]
 		public async Task<ActionResult<Guid>> CreateCart()
 		{
-			var id = await this.service.CreateCart();
-			return this.StatusCode((int)HttpStatusCode.Created, id);
+			return this.StatusCode(
+				(int)HttpStatusCode.Created,
+				await this.service.CreateCart());
 		}
 
+		[NotFoundResultFilter]
 		[HttpGet("carts/{cartId}")]
 		public async Task<ActionResult<Cart>> GetCart(Guid cartId)
 		{
 			return await this.service.GetCart(cartId);
+		}
+
+		[NotFoundResultFilter]
+		[HttpDelete("carts/{cartId}")]
+		public async Task<IActionResult> DeleteCart(Guid cartId)
+		{
+			if (await this.service.DeleteCart(cartId))
+			{
+				return this.NoContent();
+			}
+			else
+			{
+				return this.NotFound(default);
+			}
 		}
 	}
 }

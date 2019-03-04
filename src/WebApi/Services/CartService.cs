@@ -27,5 +27,10 @@ namespace ShoppingCart.WebApi.Services
 			var cart = await this.repository.GetCart(id);
 			return this.mapper.Map<Cart>(cart);
 		}
+
+		public Task<bool> DeleteCart(Guid id)
+		{
+			return this.repository.DeleteCart(id);
+		}
 	}
 }

@@ -5,7 +5,6 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using Microsoft.AspNetCore.Mvc.Testing;
 	using Microsoft.Extensions.DependencyInjection;
 	using NSubstitute;
-	using ShoppingCart.DataAccess.Models;
 	using ShoppingCart.DataAccess.Repositories;
 	using ShoppingCart.Tests.Helpers;
 	using ShoppingCart.WebApi;
@@ -17,13 +16,13 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using Xunit;
 
 	[Trait("TestCategory", "Component")]
-	public class GetCartTests
+	public class DeleteCartTests
 		: IClassFixture<WebApplicationFactory<Startup>>
 	{
 		private readonly HttpClient client;
 		private readonly ICartRepository repository = Substitute.For<ICartRepository>();
 
-		public GetCartTests(
+		public DeleteCartTests(
 			WebApplicationFactory<Startup> webApiFixture)
 		{
 			this.client = webApiFixture
@@ -37,31 +36,26 @@ namespace ShoppingCart.Tests.WebApi.Component
 
 		[Theory]
 		[AutoData]
-		public async Task WhenCartExists_ReturnsCart(Cart cart)
+		public async Task WhenCartExists_DeletesAndReturnsSuccess(Guid id)
 		{
-			this.repository.GetCart(Arg.Is<Guid>(p => p == cart.Id)).Returns(cart);
+			this.repository.DeleteCart(Arg.Is<Guid>(p => p == id)).Returns(true);
 
-			var result = await this.client.GetAsync($"/v1/carts/{cart.Id}");
+			var result = await this.client.DeleteAsync($"/v1/carts/{id}");
 
-			ReturnsStatusCode_Ok(result);
-			await ReturnsCartReturnedFromReporitory(cart, result);
+			ReturnsStatusCode_NoContent(result);
+			await ReturnsEmptyContent(result);
 		}
 
 		[Theory]
 		[AutoData]
-		public async Task WhenCartDoesNotExist_ReturnsNotFound(Guid id)
+		public async Task WhenCartDoesNotExist_ReturnsFailure(Guid id)
 		{
-			this.repository.GetCart(Arg.Any<Guid>()).Returns(default(Cart));
+			this.repository.DeleteCart(Arg.Is<Guid>(p => p == id)).Returns(false);
 
-			var result = await this.client.GetAsync($"/v1/carts/{id}");
+			var result = await this.client.DeleteAsync($"/v1/carts/{id}");
 
 			ReturnsStatusCode_NotFound(result);
 			await ReturnsEmptyContent(result);
-		}
-
-		private static async Task ReturnsCartReturnedFromReporitory(Cart cart, HttpResponseMessage result)
-		{
-			(await result.Content.ReadAsAsync<Contracts.Cart>()).Should().BeEquivalentTo(cart);
 		}
 
 		private static async Task ReturnsEmptyContent(HttpResponseMessage result)
@@ -69,9 +63,9 @@ namespace ShoppingCart.Tests.WebApi.Component
 			(await result.Content.ReadAsStringAsync()).Should().BeEmpty();
 		}
 
-		private static void ReturnsStatusCode_Ok(HttpResponseMessage result)
+		private static void ReturnsStatusCode_NoContent(HttpResponseMessage result)
 		{
-			Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+			Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
 		}
 
 		private static void ReturnsStatusCode_NotFound(HttpResponseMessage result)
