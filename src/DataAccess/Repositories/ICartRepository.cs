@@ -9,10 +9,12 @@ namespace ShoppingCart.DataAccess.Repositories
 		// Full data acces will probably be async anyway, so simulating it with this fake one
 		Task<Guid> CreateCart();
 
-		Task<Cart> GetCart(Guid id);
+		Task<Cart> GetCart(Guid cartId);
 
-		Task<bool> DeleteCart(Guid id);
+		Task<bool> DeleteCart(Guid cartId);
 
-		Task<bool> DeleteAllCartItems(Guid id);
+		Task<bool> DeleteAllCartItems(Guid cartId);
+
+		Task<bool> DeleteCartItem(Guid cartId, Guid itemId);
 	}
 }

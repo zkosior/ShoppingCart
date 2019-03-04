@@ -8,10 +8,12 @@ namespace ShoppingCart.HttpClients
 	{
 		Task<Guid> CreateCart();
 
-		Task<Cart> GetCart(Guid id);
+		Task<Cart> GetCart(Guid cartId);
 
-		Task<bool> DeleteCart(Guid id);
+		Task<bool> DeleteCart(Guid cartId);
 
-		Task<bool> ClearCartItems(Guid cartId);
+		Task<bool> DeleteAllCartItems(Guid cartId);
+
+		Task<bool> DeleteCartItem(Guid cartId, Guid itemId);
 	}
 }

@@ -11,12 +11,12 @@ namespace ShoppingCart.Tests.HttpClients
 	using Xunit;
 
 	[Trait("TestCategory", "Unit")]
-	public class ClearCartItemsTests
+	public class DeleteCartItemTests
 	{
 		private const string BaseUrl = "http://localhost:8443";
 		private readonly ShoppingCartHttpClients configuration;
 
-		public ClearCartItemsTests()
+		public DeleteCartItemTests()
 		{
 			this.configuration = new ShoppingCartHttpClients
 			{
@@ -27,17 +27,17 @@ namespace ShoppingCart.Tests.HttpClients
 
 		[Theory]
 		[AutoData]
-		public async Task WhenExists_ReturnsSuccess(Guid id)
+		public async Task WhenExists_ReturnsSuccess(Guid cartId, Guid itemId)
 		{
 			using (var httpTest = new HttpTest())
 			{
 				httpTest.RespondWith(string.Empty, 204);
 
 				var result = await new CartHttpClient(this.configuration)
-					.ClearCartItems(id);
+					.DeleteCartItem(cartId, itemId);
 
 				httpTest
-					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{id}/items")
+					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{cartId}/items/{itemId}")
 					.WithVerb(HttpMethod.Delete)
 					.Times(1);
 				result.Should().BeTrue();
@@ -46,17 +46,17 @@ namespace ShoppingCart.Tests.HttpClients
 
 		[Theory]
 		[AutoData]
-		public async Task WhenDosNotExist_ReturnsFailure(Guid id)
+		public async Task WhenDosNotExist_ReturnsFailure(Guid cartId, Guid itemId)
 		{
 			using (var httpTest = new HttpTest())
 			{
 				httpTest.RespondWith(string.Empty, 404);
 
 				var result = await new CartHttpClient(this.configuration)
-					.ClearCartItems(id);
+					.DeleteCartItem(cartId, itemId);
 
 				httpTest
-					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{id}/items")
+					.ShouldHaveCalled($"{BaseUrl}/v1/carts/{cartId}/items/{itemId}")
 					.WithVerb(HttpMethod.Delete)
 					.Times(1);
 				result.Should().BeFalse();

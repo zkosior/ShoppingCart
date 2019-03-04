@@ -16,13 +16,13 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using Xunit;
 
 	[Trait("TestCategory", "Component")]
-	public class ClearCartItemsTests
+	public class DeleteAllCartItemsTests
 		: IClassFixture<WebApplicationFactory<Startup>>
 	{
 		private readonly HttpClient client;
 		private readonly ICartRepository repository = Substitute.For<ICartRepository>();
 
-		public ClearCartItemsTests(
+		public DeleteAllCartItemsTests(
 			WebApplicationFactory<Startup> webApiFixture)
 		{
 			this.client = webApiFixture

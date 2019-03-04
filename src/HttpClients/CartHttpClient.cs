@@ -28,23 +28,23 @@ namespace ShoppingCart.HttpClients
 				.ReceiveJson<Guid>();
 		}
 
-		public async Task<Cart> GetCart(Guid id)
+		public async Task<Cart> GetCart(Guid cartId)
 		{
 			return await this.configuration.BaseUri.AbsoluteUri
-				.AppendPathSegment($"v1/carts/{id}")
+				.AppendPathSegment($"v1/carts/{cartId}")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.HandleFailure(allowEmptyResponse: true)
 				.GetAsync()
 				.ReceiveJson<Cart>();
 		}
 
-		public async Task<bool> DeleteCart(Guid id)
+		public async Task<bool> DeleteCart(Guid cartId)
 		{
 			var result = await this.configuration.BaseUri.AbsoluteUri
 				.AllowHttpStatus(
 					HttpStatusCode.NoContent,
 					HttpStatusCode.NotFound)
-				.AppendPathSegment($"v1/carts/{id}")
+				.AppendPathSegment($"v1/carts/{cartId}")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.HandleFailure(allowEmptyResponse: true)
 				.DeleteAsync();
@@ -52,13 +52,27 @@ namespace ShoppingCart.HttpClients
 			return result.StatusCode == HttpStatusCode.NoContent;
 		}
 
-		public async Task<bool> ClearCartItems(Guid id)
+		public async Task<bool> DeleteAllCartItems(Guid cartId)
 		{
 			var result = await this.configuration.BaseUri.AbsoluteUri
 				.AllowHttpStatus(
 					HttpStatusCode.NoContent,
 					HttpStatusCode.NotFound)
-				.AppendPathSegment($"v1/carts/{id}/items")
+				.AppendPathSegment($"v1/carts/{cartId}/items")
+				.WithTimeout(this.configuration.HttpTimeout.Value)
+				.HandleFailure(allowEmptyResponse: true)
+				.DeleteAsync();
+
+			return result.StatusCode == HttpStatusCode.NoContent;
+		}
+
+		public async Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
+		{
+			var result = await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(
+					HttpStatusCode.NoContent,
+					HttpStatusCode.NotFound)
+				.AppendPathSegment($"v1/carts/{cartId}/items/{itemId}")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.HandleFailure(allowEmptyResponse: true)
 				.DeleteAsync();

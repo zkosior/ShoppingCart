@@ -22,15 +22,15 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<Cart> GetCart(Guid id)
+		public Task<Cart> GetCart(Guid cartId)
 		{
 			lock (this.lockObject)
 			{
-				return Task.FromResult(Carts.Single(p => p.Id == id));
+				return Task.FromResult(Carts.Single(p => p.Id == cartId));
 			}
 		}
 
-		public Task<bool> DeleteCart(Guid id)
+		public Task<bool> DeleteCart(Guid cartId)
 		{
 			// I intend to lie here a little.
 			// Will assume that I can always delete cart.
@@ -40,7 +40,7 @@ namespace ShoppingCart.DataAccess.Repositories
 				Cart cart;
 				try
 				{
-					cart = Carts.Single(p => p.Id == id);
+					cart = Carts.Single(p => p.Id == cartId);
 				}
 				catch (InvalidOperationException)
 				{
@@ -51,14 +51,14 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteAllCartItems(Guid id)
+		public Task<bool> DeleteAllCartItems(Guid cartId)
 		{
 			lock (this.lockObject)
 			{
 				Cart cart;
 				try
 				{
-					cart = Carts.Single(p => p.Id == id);
+					cart = Carts.Single(p => p.Id == cartId);
 				}
 				catch (InvalidOperationException)
 				{
@@ -66,6 +66,25 @@ namespace ShoppingCart.DataAccess.Repositories
 				}
 
 				cart.Items = new List<Item>();
+				return Task.FromResult(true);
+			}
+		}
+
+		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
+		{
+			lock (this.lockObject)
+			{
+				Item item;
+				try
+				{
+					item = Carts.Single(p => p.Id == cartId)
+						.Items.Single(q => q.Id == itemId);
+				}
+				catch (InvalidOperationException)
+				{
+					return Task.FromResult(false);
+				}
+
 				return Task.FromResult(true);
 			}
 		}

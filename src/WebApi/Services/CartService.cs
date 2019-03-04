@@ -22,20 +22,25 @@ namespace ShoppingCart.WebApi.Services
 			return this.repository.CreateCart();
 		}
 
-		public async Task<Cart> GetCart(Guid id)
+		public async Task<Cart> GetCart(Guid cartId)
 		{
-			var cart = await this.repository.GetCart(id);
+			var cart = await this.repository.GetCart(cartId);
 			return this.mapper.Map<Cart>(cart);
 		}
 
-		public Task<bool> DeleteCart(Guid id)
+		public Task<bool> DeleteCart(Guid cartId)
 		{
-			return this.repository.DeleteCart(id);
+			return this.repository.DeleteCart(cartId);
 		}
 
-		public Task<bool> ClearCartItems(Guid id)
+		public Task<bool> ClearCartItems(Guid cartId)
 		{
-			return this.repository.DeleteAllCartItems(id);
+			return this.repository.DeleteAllCartItems(cartId);
+		}
+
+		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
+		{
+			return this.repository.DeleteCartItem(cartId, itemId);
 		}
 	}
 }

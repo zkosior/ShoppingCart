@@ -50,9 +50,22 @@ namespace ShoppingCart.WebApi.Controllers.V1
 		}
 
 		[HttpDelete("carts/{cartId}/items")]
-		public async Task<IActionResult> ClearCartItems(Guid cartId)
+		public async Task<IActionResult> DeleteAllCartItems(Guid cartId)
 		{
 			if (await this.service.ClearCartItems(cartId))
+			{
+				return this.NoContent();
+			}
+			else
+			{
+				return this.NotFound(default);
+			}
+		}
+
+		[HttpDelete("carts/{cartId}/items/{itemId}")]
+		public async Task<IActionResult> DeleteCartItem(Guid cartId, Guid itemId)
+		{
+			if (await this.service.DeleteCartItem(cartId, itemId))
 			{
 				return this.NoContent();
 			}
