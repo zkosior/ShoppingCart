@@ -1,7 +1,6 @@
 namespace ShoppingCart.Tests.WebApi.Component
 {
 	using AutoFixture.Xunit2;
-	using FluentAssertions;
 	using Microsoft.AspNetCore.Mvc.Testing;
 	using Microsoft.Extensions.DependencyInjection;
 	using NSubstitute;
@@ -11,7 +10,6 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using ShoppingCart.WebApi;
 	using System;
 	using System.Collections.Generic;
-	using System.Net;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -47,8 +45,8 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items",
 				item);
 
-			ReturnsStatusCode_Created(result);
-			await ReturnsIdOfCreatedItem(item.Id, result);
+			AssertExt.ReturnsStatusCode_Created(result);
+			await AssertExt.ReturnsIdOfCreatedItem(item.Id, result);
 		}
 
 		[Theory]
@@ -63,8 +61,8 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items",
 				item);
 
-			ReturnsStatusCode_NotFound(result);
-			await ReturnsEmptyContent(result);
+			AssertExt.ReturnsStatusCode_NotFound(result);
+			await AssertExt.ReturnsEmptyContent(result);
 		}
 
 		[Theory]
@@ -79,7 +77,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items",
 				default);
 
-			ReturnsStatusCode_BadRequest(result);
+			AssertExt.ReturnsStatusCode_BadRequest(result);
 		}
 
 		[Theory]
@@ -96,7 +94,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items",
 				item);
 
-			ReturnsStatusCode_BadRequest(result);
+			AssertExt.ReturnsStatusCode_BadRequest(result);
 		}
 
 		[Theory]
@@ -117,32 +115,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items",
 				item);
 
-			ReturnsStatusCode_BadRequest(result);
-		}
-
-		private static async Task ReturnsEmptyContent(HttpResponseMessage result)
-		{
-			(await result.Content.ReadAsStringAsync()).Should().BeEmpty();
-		}
-
-		private static void ReturnsStatusCode_NotFound(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-		}
-
-		private static void ReturnsStatusCode_BadRequest(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-		}
-
-		private static async Task ReturnsIdOfCreatedItem(Guid id, HttpResponseMessage result)
-		{
-			(await result.Content.ReadAsAsync<Guid>()).Should().Be(id);
-		}
-
-		private static void ReturnsStatusCode_Created(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.Created, result.StatusCode);
+			AssertExt.ReturnsStatusCode_BadRequest(result);
 		}
 
 		private void OverrideServices(IServiceCollection services)

@@ -1,7 +1,6 @@
 namespace ShoppingCart.Tests.WebApi.Component
 {
 	using AutoFixture.Xunit2;
-	using FluentAssertions;
 	using Microsoft.AspNetCore.Mvc.Testing;
 	using Microsoft.Extensions.DependencyInjection;
 	using NSubstitute;
@@ -10,7 +9,6 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using ShoppingCart.WebApi;
 	using System;
 	using System.Collections.Generic;
-	using System.Net;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -47,18 +45,8 @@ namespace ShoppingCart.Tests.WebApi.Component
 				default(object));
 
 			// Then
-			ReturnsStatusCode_Created(result);
-			await ReturnsIdOfCreatedCart(id, result);
-		}
-
-		private static async Task ReturnsIdOfCreatedCart(Guid id, HttpResponseMessage result)
-		{
-			(await result.Content.ReadAsAsync<Guid>()).Should().Be(id);
-		}
-
-		private static void ReturnsStatusCode_Created(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.Created, result.StatusCode);
+			AssertExt.ReturnsStatusCode_Created(result);
+			await AssertExt.ReturnsIdOfCreatedCart(id, result);
 		}
 
 		private void OverrideServices(IServiceCollection services)

@@ -1,7 +1,6 @@
 namespace ShoppingCart.Tests.WebApi.Component
 {
 	using AutoFixture.Xunit2;
-	using FluentAssertions;
 	using Microsoft.AspNetCore.Mvc.Testing;
 	using Microsoft.Extensions.DependencyInjection;
 	using NSubstitute;
@@ -10,7 +9,6 @@ namespace ShoppingCart.Tests.WebApi.Component
 	using ShoppingCart.WebApi;
 	using System;
 	using System.Collections.Generic;
-	using System.Net;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -55,8 +53,8 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items/{itemId}/quantity/{quantity}",
 				null);
 
-			ReturnsStatusCode_NoContent(result);
-			await ReturnsEmptyContent(result);
+			AssertExt.ReturnsStatusCode_NoContent(result);
+			await AssertExt.ReturnsEmptyContent(result);
 		}
 
 		[Theory]
@@ -80,8 +78,8 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items/{itemId}/quantity/{quantity}",
 				null);
 
-			ReturnsStatusCode_NotFound(result);
-			await ReturnsEmptyContent(result);
+			AssertExt.ReturnsStatusCode_NotFound(result);
+			await AssertExt.ReturnsEmptyContent(result);
 		}
 
 		[Theory]
@@ -96,27 +94,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 				$"/v1/carts/{cartId}/items/{itemId}/quantity/{quantity}",
 				null);
 
-			ReturnsStatusCode_BadRequest(result);
-		}
-
-		private static async Task ReturnsEmptyContent(HttpResponseMessage result)
-		{
-			(await result.Content.ReadAsStringAsync()).Should().BeEmpty();
-		}
-
-		private static void ReturnsStatusCode_NoContent(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-		}
-
-		private static void ReturnsStatusCode_NotFound(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
-		}
-
-		private static void ReturnsStatusCode_BadRequest(HttpResponseMessage result)
-		{
-			Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+			AssertExt.ReturnsStatusCode_BadRequest(result);
 		}
 
 		private void OverrideServices(IServiceCollection services)
