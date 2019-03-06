@@ -26,7 +26,7 @@ namespace ShoppingCart.DataAccess.Repositories
 		{
 			lock (this.lockObject)
 			{
-				return Task.FromResult(Carts.Single(p => p.Id == cartId));
+				return Task.FromResult(Carts.SingleOrDefault(p => p.Id == cartId));
 			}
 		}
 
