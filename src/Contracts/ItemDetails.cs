@@ -4,7 +4,7 @@ namespace ShoppingCart.Contracts
 
 	public class ItemDetails
 	{
-		// Something that itentifies item externally
+		// Something that identifiers item externally
 		// maybe id, maybe combination of properties
 		// but it would be better to use external id for communication
 		[BindRequired]
