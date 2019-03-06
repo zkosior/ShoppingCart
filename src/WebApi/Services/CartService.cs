@@ -56,5 +56,14 @@ namespace ShoppingCart.WebApi.Services
 				itemId,
 				quantity);
 		}
+
+		public Task<Guid> AddCartItem(Guid cartId, Item item)
+		{
+			Debug.Assert(item.Quantity > 0, "Quantity must be higher than 0.");
+
+			return this.repository.AddCartItem(
+				cartId,
+				this.mapper.Map<DataAccess.Models.Item>(item));
+		}
 	}
 }

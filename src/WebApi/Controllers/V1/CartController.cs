@@ -91,5 +91,23 @@ namespace ShoppingCart.WebApi.Controllers.V1
 				return this.NotFound(default);
 			}
 		}
+
+		[HttpPost("carts/{cartId}/items")]
+		public async Task<IActionResult> AddCartItem(
+			Guid cartId,
+			Item item)
+		{
+			var id = await this.service.AddCartItem(cartId, item);
+			if (id != Guid.Empty)
+			{
+				return this.StatusCode(
+					(int)HttpStatusCode.Created,
+					id);
+			}
+			else
+			{
+				return this.NotFound(default);
+			}
+		}
 	}
 }

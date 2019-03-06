@@ -2,6 +2,7 @@ namespace ShoppingCart.HttpClients
 {
 	using Flurl;
 	using Flurl.Http;
+	using Newtonsoft.Json;
 	using ShoppingCart.Contracts;
 	using ShoppingCart.HttpClients.Configuration;
 	using ShoppingCart.HttpClients.Extensions;
@@ -103,6 +104,57 @@ namespace ShoppingCart.HttpClients
 				.PutAsync(null);
 
 			return result.StatusCode == HttpStatusCode.NoContent;
+		}
+
+		public async Task<Guid> AddCartItem(Guid cartId, Item item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException($"Parameter '{nameof(item)}' can not be null.");
+			}
+
+			if (item.Quantity <= 0)
+			{
+				throw new ArgumentException(
+					$"Parameter '{nameof(item.Quantity)}' must be at least 1.");
+			}
+
+			var result = await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(
+					HttpStatusCode.NoContent,
+					HttpStatusCode.NotFound,
+					HttpStatusCode.BadRequest)
+				.AppendPathSegment(
+					$"v1/carts/{cartId}/items")
+				.WithTimeout(this.configuration.HttpTimeout.Value)
+				.HandleFailure(allowEmptyResponse: false)
+				.PostJsonAsync(item);
+
+			// todo: what if it's null? maybe more error handling
+			if (result.StatusCode == HttpStatusCode.NotFound)
+			{
+				throw new ArgumentException($"Cart with id '{cartId}' was not found.");
+			}
+			else if (result.StatusCode == HttpStatusCode.BadRequest)
+			{
+				throw new ArgumentException(
+					$"Bad request. Delails: '{await result.Content.ReadAsStringAsync()}'");
+			}
+			else if (result.StatusCode == HttpStatusCode.Created)
+			{
+				var id = JsonConvert.DeserializeObject<Guid>(
+					await result.Content.ReadAsStringAsync());
+				if (id != Guid.Empty)
+				{
+					return id;
+				}
+				else
+				{
+					throw new InvalidOperationException("Invalid id returned by server.");
+				}
+			}
+
+			throw new InvalidOperationException();
 		}
 	}
 }

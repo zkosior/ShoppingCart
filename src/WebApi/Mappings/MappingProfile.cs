@@ -6,8 +6,12 @@ namespace ShoppingCart.WebApi.Mappings
 	{
 		public MappingProfile()
 		{
-			this.CreateMap<DataAccess.Models.Cart, Contracts.Cart>();
-			this.CreateMap<DataAccess.Models.Item, Contracts.Item>();
+			this.CreateMap<DataAccess.Models.Cart, Contracts.Cart>()
+				.ReverseMap();
+			this.CreateMap<DataAccess.Models.Item, Contracts.Item>()
+				.ReverseMap();
+			this.CreateMap<DataAccess.Models.ItemDetails, Contracts.ItemDetails>()
+				.ReverseMap();
 		}
 	}
 }
