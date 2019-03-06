@@ -22,6 +22,7 @@ namespace ShoppingCart.HttpClients
 		public async Task<Guid> CreateCart()
 		{
 			return await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(HttpStatusCode.Created)
 				.AppendPathSegment("v1/carts")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.HandleFailure(allowEmptyResponse: false)

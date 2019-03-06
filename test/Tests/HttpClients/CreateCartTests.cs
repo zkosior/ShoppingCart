@@ -7,6 +7,7 @@ namespace ShoppingCart.Tests.HttpClients
 	using ShoppingCart.HttpClients;
 	using ShoppingCart.Tests.Helpers;
 	using System;
+	using System.Net;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -32,7 +33,9 @@ namespace ShoppingCart.Tests.HttpClients
 		{
 			using (var httpTest = new HttpTest())
 			{
-				httpTest.RespondWith(JsonConvert.SerializeObject(id), 200); // todo: created!
+				httpTest.RespondWith(
+					JsonConvert.SerializeObject(id),
+					(int)HttpStatusCode.Created);
 
 				var result = await new CartHttpClient(this.configuration)
 					.CreateCart();
