@@ -74,11 +74,13 @@ namespace ShoppingCart.DataAccess.Repositories
 		{
 			lock (this.lockObject)
 			{
+				Cart cart;
 				Item item;
 				try
 				{
-					item = Carts.Single(p => p.Id == cartId)
-						.Items.Single(q => q.Id == itemId);
+					cart = Carts.Single(p => p.Id == cartId);
+					item = cart.Items.Single(q => q.Id == itemId);
+					cart.Items.Remove(item);
 				}
 				catch (InvalidOperationException)
 				{
@@ -87,6 +89,25 @@ namespace ShoppingCart.DataAccess.Repositories
 
 				return Task.FromResult(true);
 			}
+		}
+
+		public Task<bool> UpdateCartItemQuantity(Guid cartId, Guid itemId, int quantity)
+		{
+			lock (this.lockObject)
+			{
+				try
+				{
+					Carts.Single(p => p.Id == cartId)
+						.Items.Single(q => q.Id == itemId)
+						.Quantity = quantity;
+				}
+				catch (InvalidOperationException)
+				{
+					return Task.FromResult(false);
+				}
+			}
+
+			return Task.FromResult(true);
 		}
 	}
 }

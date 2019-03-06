@@ -74,5 +74,22 @@ namespace ShoppingCart.WebApi.Controllers.V1
 				return this.NotFound(default);
 			}
 		}
+
+		[HttpPut("carts/{cartId}/items/{itemId}/quantity/{quantity}")]
+		public async Task<IActionResult> UpdateCartItemQuantity(
+			[FromRoute] UpdateCartItemQuantityParams parameters)
+		{
+			if (await this.service.UpdateCartItemQuantity(
+				parameters.cartId,
+				parameters.itemId,
+				parameters.quantity))
+			{
+				return this.NoContent();
+			}
+			else
+			{
+				return this.NotFound(default);
+			}
+		}
 	}
 }

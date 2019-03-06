@@ -4,6 +4,7 @@ namespace ShoppingCart.WebApi.Services
 	using ShoppingCart.Contracts;
 	using ShoppingCart.DataAccess.Repositories;
 	using System;
+	using System.Diagnostics;
 	using System.Threading.Tasks;
 
 	public class CartService
@@ -41,6 +42,19 @@ namespace ShoppingCart.WebApi.Services
 		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
 		{
 			return this.repository.DeleteCartItem(cartId, itemId);
+		}
+
+		public Task<bool> UpdateCartItemQuantity(
+			Guid cartId,
+			Guid itemId,
+			int quantity)
+		{
+			Debug.Assert(quantity > 0, "Quantity must be higher than 0.");
+
+			return this.repository.UpdateCartItemQuantity(
+				cartId,
+				itemId,
+				quantity);
 		}
 	}
 }

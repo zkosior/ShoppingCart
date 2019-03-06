@@ -79,5 +79,30 @@ namespace ShoppingCart.HttpClients
 
 			return result.StatusCode == HttpStatusCode.NoContent;
 		}
+
+		public async Task<bool> UpdateCartItemQuantity(
+			Guid cartId,
+			Guid itemId,
+			int quantity)
+		{
+			if (quantity <= 0)
+			{
+				throw new ArgumentException(
+					$"Parameter '{nameof(quantity)}' must be at least 1.");
+			}
+
+			var result = await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(
+					HttpStatusCode.NoContent,
+					HttpStatusCode.NotFound,
+					HttpStatusCode.BadRequest)
+				.AppendPathSegment(
+					$"v1/carts/{cartId}/items/{itemId}/quantity/{quantity}")
+				.WithTimeout(this.configuration.HttpTimeout.Value)
+				.HandleFailure(allowEmptyResponse: true)
+				.PutAsync(null);
+
+			return result.StatusCode == HttpStatusCode.NoContent;
+		}
 	}
 }

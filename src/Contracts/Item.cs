@@ -6,6 +6,6 @@ namespace ShoppingCart.Contracts
 	{
 		public Guid Id { get; set; }
 
-		public Guid ExternalId { get; set; }
+		public int Quantity { get; set; }
 	}
 }
