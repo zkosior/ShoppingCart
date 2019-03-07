@@ -70,20 +70,19 @@ namespace ShoppingCart.DataAccess.Repositories
 		{
 			lock (this.lockObject)
 			{
-				Cart cart;
-				Item item;
-				try
+				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
+				if (cart == null)
 				{
-					cart = Carts.Single(p => p.Id == cartId);
-					item = cart.Items.Single(q => q.Id == itemId);
+					return Task.FromResult(false);
 				}
-				catch (InvalidOperationException)
+
+				var item = cart.Items.SingleOrDefault(q => q.Id == itemId);
+				if (item == null)
 				{
 					return Task.FromResult(false);
 				}
 
 				cart.Items.Remove(item);
-
 				return Task.FromResult(true);
 			}
 		}
@@ -92,19 +91,21 @@ namespace ShoppingCart.DataAccess.Repositories
 		{
 			lock (this.lockObject)
 			{
-				try
-				{
-					Carts.Single(p => p.Id == cartId)
-						.Items.Single(q => q.Id == itemId)
-						.Quantity = quantity;
-				}
-				catch (InvalidOperationException)
+				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
+				if (cart == null)
 				{
 					return Task.FromResult(false);
 				}
-			}
 
-			return Task.FromResult(true);
+				var item = cart.Items.SingleOrDefault(q => q.Id == itemId);
+				if (item == null)
+				{
+					return Task.FromResult(false);
+				}
+
+				item.Quantity = quantity;
+				return Task.FromResult(true);
+			}
 		}
 
 		public Task<Guid> AddCartItem(
@@ -115,17 +116,13 @@ namespace ShoppingCart.DataAccess.Repositories
 			// but external id would be required
 			lock (this.lockObject)
 			{
-				Cart cart;
-				Item existingItem;
-				try
-				{
-					cart = Carts.Single(p => p.Id == cartId);
-					existingItem = cart.Items.SingleOrDefault(p => p.Details.Description == item.Details.Description);
-				}
-				catch (InvalidOperationException)
+				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
+				if (cart == null)
 				{
 					return Task.FromResult(Guid.Empty);
 				}
+
+				var existingItem = cart.Items.SingleOrDefault(p => p.Details.Description == item.Details.Description);
 
 				if (existingItem != null)
 				{
