@@ -112,8 +112,6 @@ namespace ShoppingCart.DataAccess.Repositories
 			Guid cartId,
 			Item item) // success or cart not found
 		{
-			// Add item could find existing and update quantity
-			// but external id would be required
 			lock (this.lockObject)
 			{
 				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
@@ -122,7 +120,8 @@ namespace ShoppingCart.DataAccess.Repositories
 					return Task.FromResult(Guid.Empty);
 				}
 
-				var existingItem = cart.Items.SingleOrDefault(p => p.Details.Description == item.Details.Description);
+				var existingItem = cart.Items.SingleOrDefault(
+					p => p.Details.ExternalId == item.Details.ExternalId);
 
 				if (existingItem != null)
 				{
