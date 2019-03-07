@@ -12,7 +12,8 @@ namespace ShoppingCart.DataAccess.Repositories
 
 		private readonly object lockObject = new object();
 
-		public Task<Guid> CreateCart() // always success
+		// always success (Guid)
+		public Task<Guid> CreateCart()
 		{
 			lock (this.lockObject)
 			{
@@ -26,7 +27,8 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<Cart> GetCart(Guid cartId) // success or not found
+		// success (object) or not found (null)
+		public Task<Cart> GetCart(Guid cartId)
 		{
 			lock (this.lockObject)
 			{
@@ -34,11 +36,9 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteCart(Guid cartId) // success, (not found or failure?)
+		// success (true), (not found (false) or failure? (false))
+		public Task<bool> DeleteCart(Guid cartId)
 		{
-			// I intend to lie here a little.
-			// Will assume that I can always delete cart.
-			// So failure will happen only when cart was not there.
 			lock (this.lockObject)
 			{
 				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
@@ -47,11 +47,15 @@ namespace ShoppingCart.DataAccess.Repositories
 					return Task.FromResult(false);
 				}
 
+				// I intend to lie here a little.
+				// Will assume that I can always delete cart.
+				// So failure will happen only when cart was not there.
 				return Task.FromResult(Carts.Remove(cart));
 			}
 		}
 
-		public Task<bool> DeleteAllCartItems(Guid cartId) // success, not found or failure
+		// success (true), not found (false)
+		public Task<bool> DeleteAllCartItems(Guid cartId)
 		{
 			lock (this.lockObject)
 			{
@@ -66,7 +70,8 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId) // success, cart not found, item not found or failure
+		// success (true), cart not found (false), item not found (false) or failure?
+		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
 		{
 			lock (this.lockObject)
 			{
@@ -82,12 +87,16 @@ namespace ShoppingCart.DataAccess.Repositories
 					return Task.FromResult(false);
 				}
 
+				// I intend to lie here a little.
+				// Will assume that I can always delete item.
+				// So failure will happen only when cart or item was not there.
 				cart.Items.Remove(item);
 				return Task.FromResult(true);
 			}
 		}
 
-		public Task<bool> UpdateCartItemQuantity(Guid cartId, Guid itemId, int quantity) // success, cart not found, item not found
+		// success (true), cart not found (false), item not found (false)
+		public Task<bool> UpdateCartItemQuantity(Guid cartId, Guid itemId, int quantity)
 		{
 			lock (this.lockObject)
 			{
@@ -108,9 +117,10 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
+		// success (Guid) or cart not found (Empty)
 		public Task<Guid> AddCartItem(
 			Guid cartId,
-			Item item) // success or cart not found
+			Item item)
 		{
 			lock (this.lockObject)
 			{
