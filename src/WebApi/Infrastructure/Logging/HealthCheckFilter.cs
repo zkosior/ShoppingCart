@@ -2,7 +2,9 @@ namespace ShoppingCart.WebApi.Infrastructure.Logging
 {
 	using Serilog.Core;
 	using Serilog.Events;
+	using System.Diagnostics.CodeAnalysis;
 
+	[ExcludeFromCodeCoverage]
 	public class HealthCheckFilter : ILogEventFilter
 	{
 		public bool IsEnabled(LogEvent logEvent)

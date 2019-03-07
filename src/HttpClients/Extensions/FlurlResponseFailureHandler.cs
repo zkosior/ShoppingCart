@@ -3,7 +3,6 @@ namespace ShoppingCart.HttpClients.Extensions
 	using Flurl;
 	using Flurl.Http;
 	using Flurl.Http.Configuration;
-	using ShoppingCart.HttpClients.Exceptions;
 	using System.Collections.Generic;
 	using System.Net;
 	using System.Net.Http;
@@ -49,7 +48,7 @@ namespace ShoppingCart.HttpClients.Extensions
 					return null;
 				}
 
-				throw new UnexpectedHttpResponseException();
+				throw FailureHandler.GetException(e);
 			}
 		}
 	}

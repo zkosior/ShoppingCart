@@ -3,7 +3,9 @@ namespace ShoppingCart.WebApi.Infrastructure.Logging
 	using Serilog;
 	using Serilog.Configuration;
 	using System;
+	using System.Diagnostics.CodeAnalysis;
 
+	[ExcludeFromCodeCoverage]
 	public static class SerilogConfigurationExtensions
 	{
 		public static LoggerConfiguration WithUtcTimestamp(

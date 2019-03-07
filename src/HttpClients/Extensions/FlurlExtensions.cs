@@ -2,7 +2,9 @@ namespace ShoppingCart.HttpClients.Extensions
 {
 	using Flurl;
 	using Flurl.Http;
+	using System.Diagnostics.CodeAnalysis;
 
+	[ExcludeFromCodeCoverage]
 	public static class FlurlExtensions
 	{
 		public static IFlurlRequest HandleFailure(this IFlurlRequest request, bool allowEmptyResponse = false)
