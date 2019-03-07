@@ -116,18 +116,28 @@ namespace ShoppingCart.DataAccess.Repositories
 			lock (this.lockObject)
 			{
 				Cart cart;
+				Item existingItem;
 				try
 				{
 					cart = Carts.Single(p => p.Id == cartId);
+					existingItem = cart.Items.SingleOrDefault(p => p.Details.Description == item.Details.Description);
 				}
 				catch (InvalidOperationException)
 				{
 					return Task.FromResult(Guid.Empty);
 				}
 
-				item.Id = Guid.NewGuid();
-				cart.Items.Add(item);
-				return Task.FromResult(item.Id);
+				if (existingItem != null)
+				{
+					existingItem.Quantity += item.Quantity;
+					return Task.FromResult(existingItem.Id);
+				}
+				else
+				{
+					item.Id = Guid.NewGuid();
+					cart.Items.Add(item);
+					return Task.FromResult(item.Id);
+				}
 			}
 		}
 	}
