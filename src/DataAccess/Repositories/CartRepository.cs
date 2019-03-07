@@ -12,17 +12,21 @@ namespace ShoppingCart.DataAccess.Repositories
 
 		private readonly object lockObject = new object();
 
-		public Task<Guid> CreateCart()
+		public Task<Guid> CreateCart() // always success
 		{
 			lock (this.lockObject)
 			{
-				var cart = new Cart { Id = Guid.NewGuid() };
+				var cart = new Cart
+				{
+					Id = Guid.NewGuid(),
+					Items = new List<Item>(),
+				};
 				Carts.Add(cart);
 				return Task.FromResult(cart.Id);
 			}
 		}
 
-		public Task<Cart> GetCart(Guid cartId)
+		public Task<Cart> GetCart(Guid cartId) // success or not found
 		{
 			lock (this.lockObject)
 			{
@@ -30,19 +34,15 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteCart(Guid cartId)
+		public Task<bool> DeleteCart(Guid cartId) // success, (not found or failure?)
 		{
 			// I intend to lie here a little.
 			// Will assume that I can always delete cart.
 			// So failure will happen only when cart was not there.
 			lock (this.lockObject)
 			{
-				Cart cart;
-				try
-				{
-					cart = Carts.Single(p => p.Id == cartId);
-				}
-				catch (InvalidOperationException)
+				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
+				if (cart == null)
 				{
 					return Task.FromResult(false);
 				}
@@ -51,16 +51,12 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteAllCartItems(Guid cartId)
+		public Task<bool> DeleteAllCartItems(Guid cartId) // success, not found or failure
 		{
 			lock (this.lockObject)
 			{
-				Cart cart;
-				try
-				{
-					cart = Carts.Single(p => p.Id == cartId);
-				}
-				catch (InvalidOperationException)
+				var cart = Carts.SingleOrDefault(p => p.Id == cartId);
+				if (cart == null)
 				{
 					return Task.FromResult(false);
 				}
@@ -70,7 +66,7 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId)
+		public Task<bool> DeleteCartItem(Guid cartId, Guid itemId) // success, cart not found, item not found or failure
 		{
 			lock (this.lockObject)
 			{
@@ -92,7 +88,7 @@ namespace ShoppingCart.DataAccess.Repositories
 			}
 		}
 
-		public Task<bool> UpdateCartItemQuantity(Guid cartId, Guid itemId, int quantity)
+		public Task<bool> UpdateCartItemQuantity(Guid cartId, Guid itemId, int quantity) // success, cart not found, item not found
 		{
 			lock (this.lockObject)
 			{
@@ -113,7 +109,7 @@ namespace ShoppingCart.DataAccess.Repositories
 
 		public Task<Guid> AddCartItem(
 			Guid cartId,
-			Item item)
+			Item item) // success or cart not found
 		{
 			// Add item could find existing and update quantity
 			// but external id would be required
