@@ -8,6 +8,7 @@ namespace ShoppingCart.WebApi
 	using Microsoft.Extensions.DependencyInjection;
 	using Serilog;
 	using ShoppingCart.WebApi.Infrastructure.Extensions;
+	using ShoppingCart.WebApi.Infrastructure.Logging;
 
 	public class Startup
 	{
@@ -32,6 +33,7 @@ namespace ShoppingCart.WebApi
 			IApiVersionDescriptionProvider provider)
 		{
 			app
+				.UseCorrelationIdHandler()
 				.UseHealthChecks("/healthcheck", new HealthCheckOptions
 				{
 					Predicate = _ => true,
