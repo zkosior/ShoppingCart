@@ -100,7 +100,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 		[Theory]
 		[InlineAutoData(0)]
 		[InlineAutoData(-1)]
-		public async Task WhenIncorrentQuantity_ReturnsBadRequest(
+		public async Task WhenIncorrectQuantity_ReturnsBadRequest(
 			int quantity,
 			Guid cartId,
 			Item item)

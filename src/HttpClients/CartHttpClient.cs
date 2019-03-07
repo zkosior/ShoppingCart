@@ -110,7 +110,7 @@ namespace ShoppingCart.HttpClients
 			if (result.StatusCode == HttpStatusCode.BadRequest)
 			{
 				throw new ArgumentException(
-					$"Bad request. Delails: '{await result.Content.ReadAsStringAsync()}'");
+					$"Bad request. Details: '{await result.Content.ReadAsStringAsync()}'");
 			}
 
 			return result.StatusCode == HttpStatusCode.NoContent;
@@ -138,7 +138,7 @@ namespace ShoppingCart.HttpClients
 			else if (result.StatusCode == HttpStatusCode.BadRequest)
 			{
 				throw new ArgumentException(
-					$"Bad request. Delails: '{await result.Content.ReadAsStringAsync()}'");
+					$"Bad request. Details: '{await result.Content.ReadAsStringAsync()}'");
 			}
 			else if (result.StatusCode == HttpStatusCode.Created)
 			{

@@ -42,7 +42,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 			var result = await this.client.GetAsync($"/v1/carts/{cart.Id}");
 
 			AssertExt.ReturnsStatusCode_Ok(result);
-			await AssertExt.ReturnsCartReturnedFromReporitory(cart, result);
+			await AssertExt.ReturnsCartReturnedFromRepository(cart, result);
 		}
 
 		[Theory]

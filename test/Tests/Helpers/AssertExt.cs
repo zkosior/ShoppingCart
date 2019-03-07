@@ -43,7 +43,7 @@ namespace ShoppingCart.Tests.Helpers
 			(await result.Content.ReadAsStringAsync()).Should().BeEmpty();
 		}
 
-		public static async Task ReturnsCartReturnedFromReporitory(
+		public static async Task ReturnsCartReturnedFromRepository(
 			Cart cart,
 			HttpResponseMessage result)
 		{

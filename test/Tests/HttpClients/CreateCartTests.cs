@@ -29,7 +29,7 @@ namespace ShoppingCart.Tests.HttpClients
 
 		[Theory]
 		[AutoData]
-		public async Task WhenSuccessfulyCreated_ReturnsId(Guid id)
+		public async Task WhenSuccessfullyCreated_ReturnsId(Guid id)
 		{
 			using (var httpTest = new HttpTest())
 			{

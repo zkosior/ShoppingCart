@@ -34,7 +34,7 @@ namespace ShoppingCart.Tests.WebApi.Component
 
 		[Theory]
 		[AutoData]
-		public async Task WhenSuccessfulyCreated_ReturnsId(Guid id)
+		public async Task WhenSuccessfullyCreated_ReturnsId(Guid id)
 		{
 			// Given
 			this.repository.CreateCart().Returns(id);

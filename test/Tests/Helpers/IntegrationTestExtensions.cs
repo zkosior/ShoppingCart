@@ -15,7 +15,7 @@ namespace ShoppingCart.Tests.Helpers
 					where TEntryPoint : class
 		{
 			return fixture.WithWebHostBuilder(builder => builder
-				.ConfigureAppConfiguration((contect, conf) =>
+				.ConfigureAppConfiguration((context, conf) =>
 					conf.AddInMemoryCollection(configuration))
 				.ConfigureServices(configureServices));
 		}
