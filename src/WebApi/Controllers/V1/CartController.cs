@@ -29,6 +29,7 @@ namespace ShoppingCart.WebApi.Controllers.V1
 				await this.service.CreateCart());
 		}
 
+		// paging, don't go beyond 85k or LOH on serialization
 		[NotFoundResultFilter]
 		[HttpGet("carts/{cartId}")]
 		public async Task<ActionResult<Cart>> GetCart(Guid cartId)

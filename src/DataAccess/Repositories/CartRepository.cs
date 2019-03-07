@@ -6,6 +6,7 @@ namespace ShoppingCart.DataAccess.Repositories
 	using System.Linq;
 	using System.Threading.Tasks;
 
+	// Temporary replacement/fake for data storage
 	public class CartRepository : ICartRepository
 	{
 		private static readonly List<Cart> Carts = new List<Cart>();

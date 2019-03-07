@@ -33,6 +33,9 @@ namespace ShoppingCart.HttpClients
 		public async Task<Cart> GetCart(Guid cartId)
 		{
 			return await this.configuration.BaseUri.AbsoluteUri
+				.AllowHttpStatus(
+					HttpStatusCode.OK,
+					HttpStatusCode.NotFound)
 				.AppendPathSegment($"v1/carts/{cartId}")
 				.WithTimeout(this.configuration.HttpTimeout.Value)
 				.HandleFailure(allowEmptyResponse: true)
@@ -104,21 +107,18 @@ namespace ShoppingCart.HttpClients
 				.HandleFailure(allowEmptyResponse: true)
 				.PutAsync(null);
 
+			if (result.StatusCode == HttpStatusCode.BadRequest)
+			{
+				throw new ArgumentException(
+					$"Bad request. Delails: '{await result.Content.ReadAsStringAsync()}'");
+			}
+
 			return result.StatusCode == HttpStatusCode.NoContent;
 		}
 
 		public async Task<Guid> AddCartItem(Guid cartId, Item item)
 		{
-			if (item == null)
-			{
-				throw new ArgumentNullException($"Parameter '{nameof(item)}' can not be null.");
-			}
-
-			if (item.Quantity <= 0)
-			{
-				throw new ArgumentException(
-					$"Parameter '{nameof(item.Quantity)}' must be at least 1.");
-			}
+			ValidateInput(item);
 
 			var result = await this.configuration.BaseUri.AbsoluteUri
 				.AllowHttpStatus(
@@ -131,7 +131,6 @@ namespace ShoppingCart.HttpClients
 				.HandleFailure(allowEmptyResponse: false)
 				.PostJsonAsync(item);
 
-			// todo: what if it's null? maybe more error handling
 			if (result.StatusCode == HttpStatusCode.NotFound)
 			{
 				throw new ArgumentException($"Cart with id '{cartId}' was not found.");
@@ -155,7 +154,27 @@ namespace ShoppingCart.HttpClients
 				}
 			}
 
-			throw new InvalidOperationException();
+			throw new InvalidOperationException("This should never happen.");
+		}
+
+		private static void ValidateInput(Item item)
+		{
+			if (item == null)
+			{
+				throw new ArgumentNullException($"Parameter '{nameof(item)}' can not be null.");
+			}
+
+			if (item.Quantity <= 0)
+			{
+				throw new ArgumentException(
+					$"Parameter '{nameof(item.Quantity)}' must be at least 1.");
+			}
+
+			if (item.Details == null || string.IsNullOrWhiteSpace(item.Details.ExternalId))
+			{
+				throw new ArgumentNullException(
+					$"Item details must be provided.");
+			}
 		}
 	}
 }
