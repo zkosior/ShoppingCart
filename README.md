@@ -26,7 +26,7 @@ All code should be written in C# and target the .NET framework library version 4
 
 From inside .\build folder run command build.ps1
 
-Parameters can be set ass command line arguments or as environment variables.
+Parameters can be set as command line arguments or as environment variables.
 Major and minor version numbers can be set in .\build\version.txt file.
 If required Http Clients can also be built for other frameworks than .NET Standard. This would need to be set in .csproj file.
 
